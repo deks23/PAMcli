@@ -23,14 +23,29 @@ public class Main {
         }
 
 
+        Service service2 = new Service();
+
+        service2.setCustomerName("deks");
+        service2.setStartTime(LocalDateTime.of(2018, 11, 19, 17, 0));
+
         System.out.println("Ok");
+
         Request request = new Request();
         request.setRequestType(RequestType.POST);
+
         Service service = new Service();
         service.setStartTime(LocalDateTime.now());
         service.setCustomerName("qweqw");
-        service.setId(12);
-        request.setService(service);
+        service.setId("asd");
+        request.setService(service2);
+
+
+        Request deleteRequest = new Request();
+        request.setRequestType(RequestType.GET);
+
+
+
+
         try {
             connection.getOutputStream().writeObject(request);
             connection.getOutputStream().close();

@@ -3,17 +3,17 @@ package pl.damiankotynia.model;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Service implements Serializable {
-    private int id;
+public class Service implements Serializable, Comparable<Service> {
+    private String id;
     private String customerName;
     private LocalDateTime startTime;
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -35,10 +35,19 @@ public class Service implements Serializable {
 
     @Override
     public String toString() {
-        return "Service{" +
+        return "Rezerwacja{" +
                 "id=" + id +
-                ", customerName='" + customerName + '\'' +
-                ", startTime=" + startTime +
+                ", nick='" + customerName + '\'' +
+                ", rozpoczecie =" + startTime +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Service o) {
+        if(this.getStartTime().isBefore(o.getStartTime()))
+            return -1;
+        if(this.getStartTime().isBefore(o.getStartTime()))
+            return 1;
+        return 0;
     }
 }
