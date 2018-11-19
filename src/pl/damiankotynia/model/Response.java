@@ -1,10 +1,12 @@
 package pl.damiankotynia.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Response implements Serializable {
     private ResponseType responseType;
     private String message;
+    private List<Service> serviceList;
 
     public ResponseType getResponseType() {
         return responseType;

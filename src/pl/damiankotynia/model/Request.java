@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Request implements Serializable {
     private Service service;
+    private String nickName;
     private RequestType requestType;
 
     public Service getService() {
@@ -22,10 +23,19 @@ public class Request implements Serializable {
         this.requestType = requestType;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
     @Override
     public String toString() {
         return "Request{" +
                 "service=" + service +
+                ", nickName='" + nickName + '\'' +
                 ", requestType=" + requestType +
                 '}';
     }
