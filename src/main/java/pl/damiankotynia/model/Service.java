@@ -33,13 +33,26 @@ public class Service implements Serializable, Comparable<Service> {
         this.startTime = startTime;
     }
 
+
+    public Service (String customerName, LocalDateTime startTime){
+        this.customerName = customerName;
+        this.startTime = startTime;
+    }
+
+    public Service(){
+
+    }
     @Override
     public String toString() {
         return "Rezerwacja{" +
-                "id=" + id +
-                ", nick='" + customerName + '\'' +
-                ", rozpoczecie =" + startTime +
+                "\tid=" + id +
+                ", \tnick= " + customerName + '\'' +
+                ", \trozpoczecie = " + startTime +
                 '}';
+    }
+
+    public String getMessage(){
+        return "Termin " + startTime + " zarezerwowany przez " + customerName;
     }
 
     @Override
