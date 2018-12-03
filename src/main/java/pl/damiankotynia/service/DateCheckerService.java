@@ -3,7 +3,7 @@ package pl.damiankotynia.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class DateChecker {
+public class DateCheckerService {
 
    public static boolean isInOpenHours(LocalDateTime startTime){
        LocalDateTime endTime = startTime.plusHours(1L);

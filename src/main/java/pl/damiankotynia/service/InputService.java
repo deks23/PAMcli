@@ -100,7 +100,7 @@ public class InputService {
             }catch (DateTimeException exception){
                 System.out.println("Podana data jest nieprawidłowa. Spróbuj ponownie");
             }
-        }while (!DateChecker.isDateAcceptable(date));
+        }while (!DateCheckerService.isDateAcceptable(date));
         return date;
     }
 

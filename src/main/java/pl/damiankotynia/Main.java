@@ -1,10 +1,10 @@
 package pl.damiankotynia;
 
 import pl.damiankotynia.model.Request;
-import pl.damiankotynia.model.RequestType;
 import pl.damiankotynia.model.Service;
+import pl.damiankotynia.service.Connection;
 import pl.damiankotynia.service.InputService;
-import pl.damiankotynia.view.MainMenu;
+import pl.damiankotynia.view.MainMenuView;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -22,8 +22,11 @@ public class Main {
         List<Service> userReservations = null;
         boolean exit = false;
         String nickname;
+
+
         try {
-            connection = new Connection(port, serverAddress);
+            connection = new Connection(port, serverAddress, userReservations);
+            new Thread(connection).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,9 +37,9 @@ public class Main {
         System.out.println("Twój nick to " + nickname);
 
         while (!exit) {
-            MainMenu.printMainMenu();
-            MainMenu.printUserReservations(userReservations);
-            MainMenu.printSeparator();
+            MainMenuView.printMainMenu();
+            MainMenuView.printUserReservations(userReservations);
+            MainMenuView.printSeparator();
 
 
             switch (inputService.getMainMenuInput()) {
@@ -65,19 +68,6 @@ public class Main {
         }
 
 /*
-        Service service2 = new Service();
-
-        service2.setCustomerName("deks");
-        service2.setStartTime(LocalDateTime.of(2018, 11, 19, 17, 0));
-
-        Request request = new Request();
-        request.setRequestType(POST);
-        request.setNickName("deks");
-        Service service = new Service();
-        service.setStartTime(LocalDateTime.now());
-        service.setCustomerName("qweqw");
-        service.setId("asd");
-        request.setService(service2);
 
 
         try {
@@ -98,9 +88,5 @@ public class Main {
         }*/
     }
 
-    public Request generateRequest(String nickname, RequestType requestType){
-
-        return null;
-    }
 
 }

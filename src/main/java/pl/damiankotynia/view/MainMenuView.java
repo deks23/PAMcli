@@ -4,7 +4,7 @@ import pl.damiankotynia.model.Service;
 
 import java.util.List;
 
-public class MainMenu {
+public class MainMenuView {
 
     public static void printMainMenu(){
         System.out.println("\t\t\tSALON FRYZJERSKI\n\n");
