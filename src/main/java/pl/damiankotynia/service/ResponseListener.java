@@ -5,29 +5,28 @@ import pl.damiankotynia.model.Response;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-public class ResponseListener implements Runnable{
+public class ResponseListener implements Runnable {
     private ObjectInputStream inputStream;
     private boolean isRunning;
 
     public ResponseListener(ObjectInputStream inputStream) {
         this.inputStream = inputStream;
-        this.isRunning=true;
+        this.isRunning = true;
     }
 
     @Override
     public void run() {
         while (isRunning) {
-            Response response = null;
+            Object response = null;
             try {
 
                 //TODO obsługa responsów w zależności od tego jaki otrzymaliśmy
 
-                response = getResponse(inputStream.readObject());
+                response = inputStream.readObject();
+
                 System.out.println(response.toString());
-            } catch (InvalidResponseFormatException e) {
-                e.printStackTrace();
+
             } catch (IOException e) {
                 e.printStackTrace();
                 isRunning ^= true;
