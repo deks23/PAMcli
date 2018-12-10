@@ -25,20 +25,7 @@ public class Connection implements Runnable {
     }
 
     public void run() {
-        while (isRunning) {
-            Response response = null;
-            try {
-                response = getResponse(inputStream.readObject());
-                System.out.println(response.toString());
-            } catch (InvalidResponseFormatException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-                isRunning ^= true;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
+       new Thread(new ResponseListener(inputStream)).start();
     }
 
 
@@ -51,6 +38,16 @@ public class Connection implements Runnable {
             throw new InvalidResponseFormatException();
         else
             return (Response) response;
+    }
+
+    public synchronized boolean writeObject(Object object){
+        try {
+            outputStream.writeObject(object);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public Socket getSocket() {
