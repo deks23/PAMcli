@@ -17,6 +17,11 @@ public class Request implements Serializable {
         this.nickName = nickname;
     }
 
+    public Request(RequestType requestType, String nickname){
+        this.requestType = requestType;
+        this.nickName = nickname;
+    }
+
     public Service getService() {
         return service;
     }

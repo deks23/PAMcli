@@ -15,6 +15,7 @@ public class Connection implements Runnable {
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     private boolean isRunning;
+    private List<Service> userReservations;
 
     public Connection(int port, String serverAddress, List<Service> usersReservations) throws IOException {
         socket = new Socket(serverAddress, port);
@@ -22,16 +23,14 @@ public class Connection implements Runnable {
         outputStream = new ObjectOutputStream(socket.getOutputStream());
         inputStream = new ObjectInputStream(socket.getInputStream());
         this.isRunning = true;
+        this.userReservations = usersReservations;
     }
 
     public void run() {
-       new Thread(new ResponseListener(inputStream)).start();
+       new Thread(new ResponseListener(inputStream, userReservations)).start();
     }
 
 
-    private void handleResponse(){
-
-    }
 
     private Response getResponse(Object response) throws InvalidResponseFormatException {
         if (!(response instanceof Response))

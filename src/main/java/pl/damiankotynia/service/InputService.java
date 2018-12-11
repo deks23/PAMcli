@@ -83,6 +83,17 @@ public class InputService {
         return returnValue;
     }
 
+    public int getIndex(int max){
+        boolean isCorrect = false;
+        int returnValue = 0;
+        while(!isCorrect){
+            returnValue = getInteger();
+            if(returnValue<=max)
+                isCorrect ^= isCorrect;
+        }
+        return returnValue;
+    }
+
     public LocalDateTime getDate(){
         LocalDateTime date = null;
         do {

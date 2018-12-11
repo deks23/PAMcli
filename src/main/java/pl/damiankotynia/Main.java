@@ -8,8 +8,12 @@ import pl.damiankotynia.view.MainMenuView;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
+import static pl.damiankotynia.model.RequestType.DELETE;
+import static pl.damiankotynia.model.RequestType.GET;
 import static pl.damiankotynia.model.RequestType.POST;
 
 public class Main {
@@ -19,10 +23,10 @@ public class Main {
         String serverAddress = "localhost";
         Connection connection = null;
         InputService inputService = new InputService();
-        List<Service> userReservations = null;
+        List<Service> userReservations = new LinkedList<>();
         boolean exit = false;
         String nickname;
-
+        Request request;
 
         try {
             connection = new Connection(port, serverAddress, userReservations);
@@ -37,16 +41,20 @@ public class Main {
         System.out.println("Twój nick to " + nickname);
 
         while (!exit) {
-            MainMenuView.printMainMenu();
-            MainMenuView.printUserReservations(userReservations);
-            MainMenuView.printSeparator();
+            request = new Request( GET, nickname);
+            try {
+                connection.getOutputStream().writeObject(request);
+            } catch (IOException e) {
+                System.out.println("Wystąpił nieoczekiwany błąd. Spróbuj ponownie później");
+            }
+
 
 
             switch (inputService.getMainMenuInput()) {
                 case 1:
                     LocalDateTime date = inputService.getDate();
                     Service service = new Service(nickname, date);
-                    Request request = new Request(service, POST, nickname);
+                    request = new Request(service, POST, nickname);
                     try {
                         connection.getOutputStream().writeObject(request);
                     } catch (IOException e) {
@@ -54,6 +62,17 @@ public class Main {
                     }
                     break;
                 case 2:
+                    if(userReservations.isEmpty()){
+                        System.out.println("Nie posiadasz żadnych rezerwacji do usunięcia");
+                        break;
+                    }
+                    int index = inputService.getInteger();
+                    request = new Request(userReservations.get(index), DELETE, nickname);
+                    try {
+                        connection.getOutputStream().writeObject(request);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case 3:
                     //TODO
@@ -66,26 +85,6 @@ public class Main {
             }
 
         }
-
-/*
-
-
-        try {
-            connection.getOutputStream().writeObject(request);
-            //while(true){
-            Object qwe = null;
-            try {
-                qwe = connection.getInputStream().readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            System.out.println("obiekt z serwera " + qwe.toString());
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
