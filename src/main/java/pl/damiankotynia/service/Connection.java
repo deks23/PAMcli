@@ -1,6 +1,8 @@
 package pl.damiankotynia.service;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import pl.damiankotynia.exceptions.InvalidResponseFormatException;
+import pl.damiankotynia.model.Model;
 import pl.damiankotynia.model.Response;
 import pl.damiankotynia.model.Service;
 
@@ -15,19 +17,19 @@ public class Connection implements Runnable {
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
     private boolean isRunning;
-    private List<Service> userReservations;
+    Model model;
 
-    public Connection(int port, String serverAddress, List<Service> usersReservations) throws IOException {
+    public Connection(int port, String serverAddress, Model model) throws IOException {
         socket = new Socket(serverAddress, port);
         BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outputStream = new ObjectOutputStream(socket.getOutputStream());
         inputStream = new ObjectInputStream(socket.getInputStream());
         this.isRunning = true;
-        this.userReservations = usersReservations;
+        this.model = model;
     }
 
     public void run() {
-       new Thread(new ResponseListener(inputStream, userReservations)).start();
+       new Thread(new ResponseListener(inputStream, model)).start();
     }
 
 

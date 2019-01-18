@@ -1,5 +1,6 @@
 package pl.damiankotynia;
 
+import pl.damiankotynia.model.Model;
 import pl.damiankotynia.model.Request;
 import pl.damiankotynia.model.Service;
 import pl.damiankotynia.service.Connection;
@@ -27,12 +28,14 @@ public class Main {
         boolean exit = false;
         String nickname;
         Request request;
+        Model model = new Model();
 
         try {
-            connection = new Connection(port, serverAddress, userReservations);
+            connection = new Connection(port, serverAddress, model);
             new Thread(connection).start();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Nie można połączyć się z serwerem. Proszę spróbować później.");
+            System.exit(0);
         }
 
 
@@ -62,12 +65,14 @@ public class Main {
                     }
                     break;
                 case 2:
-                    if(userReservations.isEmpty()){
+                    if(model.getUserReservations().isEmpty()){
                         System.out.println("Nie posiadasz żadnych rezerwacji do usunięcia");
                         break;
                     }
-                    int index = inputService.getInteger();
-                    request = new Request(userReservations.get(index), DELETE, nickname);
+                    System.out.println("Wybierz rezerwację ");
+
+                    int index = inputService.getIndex(model.getUserReservations().size()-1);
+                    request = new Request(model.getUserReservations().get(index), DELETE, nickname);
                     try {
                         connection.getOutputStream().writeObject(request);
                     } catch (IOException e) {
@@ -75,16 +80,23 @@ public class Main {
                     }
                     break;
                 case 3:
-                    //TODO
-                    break;
-                case 4:
                     System.out.println("\nZakończyć działanie programu? ");
                     exit = inputService.getAreYouSure();
                     break;
 
+
             }
 
         }
+
+        try {
+            connection.getOutputStream().close();
+            connection.getInputStream().close();
+            connection.getSocket().close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(1);
     }
 
 

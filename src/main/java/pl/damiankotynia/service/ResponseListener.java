@@ -1,23 +1,22 @@
 package pl.damiankotynia.service;
 
 import pl.damiankotynia.exceptions.InvalidResponseFormatException;
+import pl.damiankotynia.model.Model;
 import pl.damiankotynia.model.Response;
-import pl.damiankotynia.model.Service;
 import pl.damiankotynia.view.MainMenuView;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.List;
 
 public class ResponseListener implements Runnable {
     private ObjectInputStream inputStream;
     private boolean isRunning;
-    private List<Service> userReservations;
+    private Model model;
 
-    public ResponseListener(ObjectInputStream inputStream, List<Service> userReservations) {
+    public ResponseListener(ObjectInputStream inputStream, Model model) {
         this.inputStream = inputStream;
         this.isRunning = true;
-        this.userReservations = userReservations;
+        this.model = model;
     }
 
     @Override
@@ -27,35 +26,34 @@ public class ResponseListener implements Runnable {
             Response response = null;
             try {
                 responseObject = inputStream.readObject();
-                try {
-                    response = getResponse(responseObject);
-                } catch (InvalidResponseFormatException e) {
-                    System.out.println(response.toString());
-                }
-
+                response = getResponse(responseObject);
                 switch (response.getResponseType()) {
                     case RESERVATION_COMPLETE:
                     case DELETED_RESERVATION:
-                            userReservations.clear();
-                            userReservations.addAll(response.getServiceList());
+                        model.setUserReservations(response.getServiceList());
                         System.out.println(response.getMessage());
-                        MainMenuView.printMenu(userReservations);
+                        MainMenuView.printMenu(model.getUserReservations());
                         break;
                     case RESERVATION_FAILED:
                     case RESERVATION_REMOVING_FAILED:
                         System.out.println(response.getMessage());
                         break;
                     case GET_OWN_RESERVATIONS:
-                        userReservations = response.getServiceList();
-                        MainMenuView.printMenu(userReservations);
+                        model.setUserReservations(response.getServiceList());
+                        MainMenuView.printMenu(model.getUserReservations());
+                    default:
+                        break;
                 }
 
 
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("\n Błąd serwera. Kończę działanie aplikacji \n");
                 isRunning ^= true;
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("\n Niepoprawna odpowiedź serwera. Kończę działanie aplikacji \n");
+                isRunning ^= true;
+            } catch (InvalidResponseFormatException e) {
+                System.out.println(responseObject);
             }
         }
     }

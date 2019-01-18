@@ -35,14 +35,14 @@ public class InputService {
     }
 
     public int getMainMenuInput(){
-
+        int menuSize = 4;
         boolean isCorrect = false;
         int returnValue = 0;
         while(!isCorrect){
             String value = input.nextLine();
             try{
                 returnValue = Integer.parseInt(value);
-                if(returnValue>=0 && returnValue<5)
+                if(returnValue>=0 && returnValue<menuSize)
                     isCorrect = true;
                 else
                     System.out.println("Podana wartosc jest niepoprawna");
@@ -89,7 +89,9 @@ public class InputService {
         while(!isCorrect){
             returnValue = getInteger();
             if(returnValue<=max)
-                isCorrect ^= isCorrect;
+                isCorrect = !isCorrect;
+            else
+                System.out.println("Wartość minimalna wartość to 0 a maksymalna to " + max);
         }
         return returnValue;
     }
